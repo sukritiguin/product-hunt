@@ -381,6 +381,13 @@ body {
     height: 350px;
 }
 
+/* Make chart legend items interactive */
+.chart-container canvas {
+    cursor: default;
+}
+
+/* Legend items will have pointer cursor via Chart.js */
+
 /* Table */
 .table-card {
     background: var(--bg-card);

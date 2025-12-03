@@ -223,6 +223,9 @@ function updateCharts(data) {
     const datasets = [];
     const variantNames = Object.keys(variantData);
 
+    console.log('📊 Number of variants found:', variantNames.length);
+    console.log('📊 Variant names:', variantNames);
+
     variantNames.forEach((variant, index) => {
         const prices = allDates.map(date => {
             if (variantData[variant][date]) {
@@ -251,6 +254,8 @@ function updateCharts(data) {
             spanGaps: true // Connect lines even if there are null values
         });
     });
+
+    console.log('📊 Number of datasets created:', datasets.length);
 
     // Update price trend chart with multiple lines
     updatePriceTrendChart(allDates, datasets);
@@ -303,6 +308,19 @@ function updatePriceTrendChart(labels, datasets) {
                         },
                         usePointStyle: true,
                         pointStyle: 'circle'
+                    },
+                    onClick: function (e, legendItem, legend) {
+                        // Default Chart.js behavior - toggle dataset visibility
+                        const index = legendItem.datasetIndex;
+                        const ci = legend.chart;
+
+                        if (ci.isDatasetVisible(index)) {
+                            ci.hide(index);
+                            legendItem.hidden = true;
+                        } else {
+                            ci.show(index);
+                            legendItem.hidden = false;
+                        }
                     }
                 },
                 tooltip: {
