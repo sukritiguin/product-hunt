@@ -196,27 +196,66 @@ function updateStats(stats) {
 
 // Update charts
 function updateCharts(data) {
-    // Process data for price trend chart
+    // Process data for price trend chart - group by variant and date
     const sortedData = [...data].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
-    // Group by date and calculate average price
-    const priceByDate = {};
+    // Group data by variant (color + RAM + storage)
+    const variantData = {};
     sortedData.forEach(item => {
-        const date = new Date(item.timestamp).toLocaleDateString();
-        if (!priceByDate[date]) {
-            priceByDate[date] = { total: 0, count: 0 };
+        const variant = `${item.color} - ${item.ram}/${item.storage}`;
+        if (!variantData[variant]) {
+            variantData[variant] = {};
         }
-        priceByDate[date].total += item.price;
-        priceByDate[date].count += 1;
+
+        const date = new Date(item.timestamp).toLocaleDateString();
+        if (!variantData[variant][date]) {
+            variantData[variant][date] = { total: 0, count: 0 };
+        }
+        variantData[variant][date].total += item.price;
+        variantData[variant][date].count += 1;
     });
 
-    const dates = Object.keys(priceByDate);
-    const avgPrices = dates.map(date => priceByDate[date].total / priceByDate[date].count);
+    // Get all unique dates
+    const allDates = [...new Set(sortedData.map(item => new Date(item.timestamp).toLocaleDateString()))];
+    allDates.sort((a, b) => new Date(a) - new Date(b));
 
-    // Update price trend chart
-    updatePriceTrendChart(dates, avgPrices);
+    // Prepare datasets for each variant
+    const datasets = [];
+    const variantNames = Object.keys(variantData);
 
-    // Process data for distribution chart
+    variantNames.forEach((variant, index) => {
+        const prices = allDates.map(date => {
+            if (variantData[variant][date]) {
+                return variantData[variant][date].total / variantData[variant][date].count;
+            }
+            return null;
+        });
+
+        // Generate a unique color for each variant
+        const hue = (index * 360 / variantNames.length) % 360;
+        const color = `hsl(${hue}, 70%, 60%)`;
+
+        datasets.push({
+            label: variant,
+            data: prices,
+            borderColor: color,
+            backgroundColor: `hsla(${hue}, 70%, 60%, 0.1)`,
+            borderWidth: 3,
+            fill: false,
+            tension: 0.4,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            pointBackgroundColor: color,
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            spanGaps: true // Connect lines even if there are null values
+        });
+    });
+
+    // Update price trend chart with multiple lines
+    updatePriceTrendChart(allDates, datasets);
+
+    // Process data for distribution chart (unchanged)
     const variantPrices = {};
     data.forEach(item => {
         const variant = `${item.color} - ${item.ram}/${item.storage}`;
@@ -236,7 +275,7 @@ function updateCharts(data) {
 }
 
 // Update price trend chart
-function updatePriceTrendChart(labels, data) {
+function updatePriceTrendChart(labels, datasets) {
     const ctx = document.getElementById('price-trend-chart').getContext('2d');
 
     if (priceChart) {
@@ -247,27 +286,24 @@ function updatePriceTrendChart(labels, data) {
         type: 'line',
         data: {
             labels: labels,
-            datasets: [{
-                label: 'Average Price',
-                data: data,
-                borderColor: '#667eea',
-                backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                borderWidth: 3,
-                fill: true,
-                tension: 0.4,
-                pointRadius: 4,
-                pointHoverRadius: 6,
-                pointBackgroundColor: '#667eea',
-                pointBorderColor: '#fff',
-                pointBorderWidth: 2
-            }]
+            datasets: datasets
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    display: false
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        color: '#a0aec0',
+                        padding: 15,
+                        font: {
+                            size: 12
+                        },
+                        usePointStyle: true,
+                        pointStyle: 'circle'
+                    }
                 },
                 tooltip: {
                     backgroundColor: 'rgba(15, 23, 42, 0.9)',
@@ -278,7 +314,7 @@ function updatePriceTrendChart(labels, data) {
                     borderWidth: 1,
                     callbacks: {
                         label: function (context) {
-                            return `₹${context.parsed.y.toLocaleString()}`;
+                            return `${context.dataset.label}: ₹${context.parsed.y.toLocaleString()}`;
                         }
                     }
                 }

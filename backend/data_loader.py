@@ -31,7 +31,7 @@ def load_data_from_athena():
             price,
             timestamp,
             model
-        FROM `{ATHENA_DATABASE}`.`{ATHENA_TABLE}`
+        FROM {ATHENA_DATABASE}.{ATHENA_TABLE}
         ORDER BY timestamp DESC
         """
         
