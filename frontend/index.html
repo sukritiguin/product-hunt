@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phone Price Tracker - Data Analytics Dashboard</title>
+    <meta name="description" content="Track and analyze phone model prices across different variants and time periods">
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="logo">
+                    <span class="logo-icon">📱</span>
+                    Phone Price Tracker
+                </h1>
+                <p class="subtitle">Real-time price analytics for your favorite phone models</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Filters Panel -->
+            <aside class="filters-panel">
+                <h2 class="panel-title">Filters</h2>
+
+                <div class="filter-group">
+                    <label for="model-select">Phone Model</label>
+                    <select id="model-select" class="filter-select">
+                        <option value="">All Models</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="color-select">Color</label>
+                    <select id="color-select" class="filter-select">
+                        <option value="">All Colors</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="ram-select">RAM</label>
+                    <select id="ram-select" class="filter-select">
+                        <option value="">All RAM</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="storage-select">Storage</label>
+                    <select id="storage-select" class="filter-select">
+                        <option value="">All Storage</option>
+                    </select>
+                </div>
+
+                <button id="reset-filters" class="btn-reset">Reset Filters</button>
+            </aside>
+
+            <!-- Dashboard -->
+            <section class="dashboard">
+                <!-- Empty State (shown when no model is selected) -->
+                <div id="empty-state" class="empty-state">
+                    <div class="empty-state-content">
+                        <div class="empty-state-icon">📱</div>
+                        <h2 class="empty-state-title">Welcome to Phone Price Tracker</h2>
+                        <p class="empty-state-description">
+                            Track and analyze phone prices across different models, colors, and configurations.
+                        </p>
+                        <div class="empty-state-steps">
+                            <div class="step-item">
+                                <span class="step-number">1</span>
+                                <p>Select a phone model from the filters panel</p>
+                            </div>
+                            <div class="step-item">
+                                <span class="step-number">2</span>
+                                <p>Optionally filter by color, RAM, or storage</p>
+                            </div>
+                            <div class="step-item">
+                                <span class="step-number">3</span>
+                                <p>View price trends, statistics, and analytics</p>
+                            </div>
+                        </div>
+                        <div class="empty-state-cta">
+                            <p class="cta-text">👈 Start by selecting a phone model</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data View (shown when model is selected) -->
+                <div id="data-view" class="data-view" style="display: none;">
+                    <!-- Stats Cards -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">💰</div>
+                            <div class="stat-content">
+                                <p class="stat-label">Current Price</p>
+                                <h3 class="stat-value" id="current-price">₹0</h3>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon">📉</div>
+                            <div class="stat-content">
+                                <p class="stat-label">Lowest Price</p>
+                                <h3 class="stat-value" id="min-price">₹0</h3>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon">📈</div>
+                            <div class="stat-content">
+                                <p class="stat-label">Highest Price</p>
+                                <h3 class="stat-value" id="max-price">₹0</h3>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon">📊</div>
+                            <div class="stat-content">
+                                <p class="stat-label">Average Price</p>
+                                <h3 class="stat-value" id="avg-price">₹0</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts -->
+                    <div class="charts-grid">
+                        <!-- Price Trend Chart -->
+                        <div class="chart-card">
+                            <h3 class="chart-title">Price Trend Over Time</h3>
+                            <div class="chart-container">
+                                <canvas id="price-trend-chart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Price Distribution Chart -->
+                        <div class="chart-card">
+                            <h3 class="chart-title">Price Distribution by Variant</h3>
+                            <div class="chart-container">
+                                <canvas id="price-distribution-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Data Table -->
+                    <div class="table-card">
+                        <h3 class="chart-title">Recent Price Data</h3>
+                        <div class="table-container">
+                            <table id="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Model</th>
+                                        <th>Color</th>
+                                        <th>RAM</th>
+                                        <th>Storage</th>
+                                        <th>Price</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-body">
+                                    <!-- Data will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+
+</html>
