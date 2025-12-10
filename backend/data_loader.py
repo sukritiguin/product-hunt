@@ -32,6 +32,7 @@ def load_data_from_athena():
             timestamp,
             model
         FROM {ATHENA_DATABASE}.{ATHENA_TABLE}
+        WHERE CAST(price AS double) > 0
         ORDER BY timestamp DESC
         """
         
