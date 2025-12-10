@@ -15,19 +15,51 @@
 
 <body>
     <div class="container">
-        <!-- Header -->
+        <!-- Header - Enhanced AWS Style -->
         <header class="header">
             <div class="header-content">
+                <div class="service-badge">
+                    <span class="aws-label">AWS</span>
+                    <span class="service-divider">|</span>
+                    <span class="service-name">Data Engineering</span>
+                </div>
                 <h1 class="logo">
-                    <span class="logo-icon">📱</span>
+                    <!-- <div class="logo-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="5" y="2" width="14" height="20" rx="3" ry="3"></rect>
+                            <path d="M12 18h.01"></path>
+                            <line x1="9" y1="6" x2="15" y2="6"></line>
+                            <line x1="9" y1="10" x2="15" y2="10"></line>
+                            <line x1="9" y1="14" x2="15" y2="14"></line>
+                        </svg>
+                    </div> -->
                     Phone Price Tracker
                 </h1>
-                <p class="subtitle">Real-time price analytics for your favorite phone models</p>
+                <p class="subtitle">Daily price analytics and data visualization for mobile devices</p>
             </div>
         </header>
 
+
         <!-- Main Content -->
         <main class="main-content">
+            <!-- Mobile Filter Toggle -->
+            <button id="filter-toggle" class="filter-toggle">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="4" y1="21" x2="4" y2="14"></line>
+                    <line x1="4" y1="10" x2="4" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12" y2="3"></line>
+                    <line x1="20" y1="21" x2="20" y2="16"></line>
+                    <line x1="20" y1="12" x2="20" y2="3"></line>
+                    <line x1="1" y1="14" x2="7" y2="14"></line>
+                    <line x1="9" y1="8" x2="15" y2="8"></line>
+                    <line x1="17" y1="16" x2="23" y2="16"></line>
+                </svg>
+                Filters
+            </button>
+
             <!-- Filters Panel -->
             <aside class="filters-panel">
                 <h2 class="panel-title">Filters</h2>
@@ -68,7 +100,13 @@
                 <!-- Empty State (shown when no model is selected) -->
                 <div id="empty-state" class="empty-state">
                     <div class="empty-state-content">
-                        <div class="empty-state-icon">📱</div>
+                        <!-- <div class="empty-state-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                                <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                            </svg>
+                        </div> -->
                         <h2 class="empty-state-title">Welcome to Phone Price Tracker</h2>
                         <p class="empty-state-description">
                             Track and analyze phone prices across different models, colors, and configurations.
@@ -88,44 +126,73 @@
                             </div>
                         </div>
                         <div class="empty-state-cta">
-                            <p class="cta-text">👈 Start by selecting a phone model</p>
+                            <p class="cta-text">Get started by selecting a phone model</p>
                         </div>
                     </div>
                 </div>
+
 
                 <!-- Data View (shown when model is selected) -->
                 <div id="data-view" class="data-view" style="display: none;">
                     <!-- Stats Cards -->
                     <div class="stats-grid">
                         <div class="stat-card">
-                            <div class="stat-icon">💰</div>
+                            <div class="stat-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M12 6v6l4 2"></path>
+                                </svg>
+                            </div>
                             <div class="stat-content">
                                 <p class="stat-label">Current Price</p>
                                 <h3 class="stat-value" id="current-price">₹0</h3>
+                                <p class="stat-change">Latest market value</p>
                             </div>
                         </div>
 
                         <div class="stat-card">
-                            <div class="stat-icon">📉</div>
+                            <div class="stat-icon stat-icon-success">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                                </svg>
+                            </div>
                             <div class="stat-content">
                                 <p class="stat-label">Lowest Price</p>
                                 <h3 class="stat-value" id="min-price">₹0</h3>
+                                <p class="stat-change stat-positive">↓ Best deal</p>
                             </div>
                         </div>
 
                         <div class="stat-card">
-                            <div class="stat-icon">📈</div>
+                            <div class="stat-icon stat-icon-warning">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <polyline points="19 12 12 19 5 12"></polyline>
+                                </svg>
+                            </div>
                             <div class="stat-content">
                                 <p class="stat-label">Highest Price</p>
                                 <h3 class="stat-value" id="max-price">₹0</h3>
+                                <p class="stat-change stat-negative">↑ Peak value</p>
                             </div>
                         </div>
 
                         <div class="stat-card">
-                            <div class="stat-icon">📊</div>
+                            <div class="stat-icon stat-icon-info">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                            </div>
                             <div class="stat-content">
                                 <p class="stat-label">Average Price</p>
                                 <h3 class="stat-value" id="avg-price">₹0</h3>
+                                <p class="stat-change">Market average</p>
                             </div>
                         </div>
                     </div>
@@ -175,6 +242,124 @@
             </section>
         </main>
     </div>
+
+    <!-- Footer - AWS Services Showcase -->
+    <footer class="footer">
+        <div class="footer-container">
+            <!-- About Section -->
+            <div class="footer-section about-section">
+                <h3 class="footer-title">About This Project</h3>
+                <p class="footer-description">
+                    An automated web scraping and analytics platform that tracks mobile phone prices daily using AWS
+                    Step Functions orchestration.
+                    Launches EC2 spot instances for cost-effective data collection with Playwright, stores data in S3,
+                    and provides real-time analytics through Athena queries and interactive visualizations.
+                </p>
+            </div>
+
+            <!-- AWS Services Section -->
+            <div class="footer-section aws-section">
+                <h3 class="footer-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round"
+                        style="display: inline; vertical-align: middle; margin-right: 8px;">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                        <polyline points="2 17 12 22 22 17"></polyline>
+                        <polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                    AWS Services Used
+                </h3>
+                <div class="service-badges-grid">
+                    <div class="service-badge-item"
+                        data-tooltip="Scalable compute - T3 medium spot instances for cost-effective scraping">
+                        <div class="service-icon-badge">
+                            <img src="https://icon.icepanel.io/AWS/svg/Compute/EC2.svg" alt="EC2" class="aws-icon"
+                                onerror="this.style.display='none'">
+                        </div>
+                        <span class="service-name">Amazon EC2</span>
+                        <span class="service-desc">Spot Instances</span>
+                    </div>
+                    <div class="service-badge-item"
+                        data-tooltip="Serverless orchestration - Coordinates EC2 lifecycle and scraping workflow">
+                        <div class="service-icon-badge">
+                            <img src="https://icon.icepanel.io/AWS/svg/App-Integration/Step-Functions.svg"
+                                alt="Step Functions" class="aws-icon" onerror="this.style.display='none'">
+                        </div>
+                        <span class="service-name">Step Functions</span>
+                        <span class="service-desc">Orchestration</span>
+                    </div>
+                    <div class="service-badge-item"
+                        data-tooltip="Serverless compute - Controls EC2, checks dependencies and scraping status">
+                        <div class="service-icon-badge">
+                            <img src="https://icon.icepanel.io/AWS/svg/Compute/Lambda.svg" alt="Lambda" class="aws-icon"
+                                onerror="this.style.display='none'">
+                        </div>
+                        <span class="service-name">AWS Lambda</span>
+                        <span class="service-desc">Functions</span>
+                    </div>
+                    <div class="service-badge-item" data-tooltip="Interactive SQL analytics on S3 data">
+                        <div class="service-icon-badge">
+                            <img src="https://icon.icepanel.io/AWS/svg/Analytics/Athena.svg" alt="Athena"
+                                class="aws-icon" onerror="this.style.display='none'">
+                        </div>
+                        <span class="service-name">Amazon Athena</span>
+                        <span class="service-desc">SQL Queries</span>
+                    </div>
+                    <div class="service-badge-item" data-tooltip="Object storage for scraped data and scraping code">
+                        <div class="service-icon-badge">
+                            <img src="https://icon.icepanel.io/AWS/svg/Storage/Simple-Storage-Service.svg" alt="S3"
+                                class="aws-icon" onerror="this.style.display='none'">
+                        </div>
+                        <span class="service-name">Amazon S3</span>
+                        <span class="service-desc">Data Storage</span>
+                    </div>
+                    <div class="service-badge-item"
+                        data-tooltip="Identity and access management - Secure permissions for all services">
+                        <div class="service-icon-badge">
+                            <img src="https://icon.icepanel.io/AWS/svg/Security-Identity-Compliance/IAM-Identity-Center.svg"
+                                alt="IAM" class="aws-icon" onerror="this.style.display='none'">
+                        </div>
+                        <span class="service-name">AWS IAM</span>
+                        <span class="service-desc">Security</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tech Stack Section -->
+            <div class="footer-section tech-stack-section">
+                <h3 class="footer-title">Technology Stack</h3>
+                <div class="tech-stack-grid">
+                    <div class="tech-category">
+                        <h4 class="tech-category-title">Scraping</h4>
+                        <p class="tech-list">Python • Playwright • BeautifulSoup</p>
+                    </div>
+                    <div class="tech-category">
+                        <h4 class="tech-category-title">Backend</h4>
+                        <p class="tech-list">Python • FastAPI • Boto3</p>
+                    </div>
+                    <div class="tech-category">
+                        <h4 class="tech-category-title">Frontend</h4>
+                        <p class="tech-list">HTML5 • CSS3 • JavaScript • Chart.js</p>
+                    </div>
+                    <div class="tech-category">
+                        <h4 class="tech-category-title">Data</h4>
+                        <p class="tech-list">Amazon Athena • Parquet • SQL</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <div class="footer-badge">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span>Built with AWS</span>
+                </div>
+                <p class="footer-credit">Data Engineering Resume Project • 2024</p>
+            </div>
+        </div>
+    </footer>
 
     <script src="/static/app.js?v=3"></script>
 </body>

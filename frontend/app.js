@@ -23,7 +23,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('ram-select').addEventListener('change', handleFilterChange);
     document.getElementById('storage-select').addEventListener('change', handleFilterChange);
     document.getElementById('reset-filters').addEventListener('click', resetFilters);
+
+    // Mobile filter toggle
+    const filterToggle = document.getElementById('filter-toggle');
+    const filtersPanel = document.querySelector('.filters-panel');
+
+    if (filterToggle) {
+        filterToggle.addEventListener('click', () => {
+            filtersPanel.classList.toggle('active');
+        });
+
+        // Close filters when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (filtersPanel.classList.contains('active') &&
+                !filtersPanel.contains(e.target) &&
+                !filterToggle.contains(e.target)) {
+                filtersPanel.classList.remove('active');
+            }
+        });
+    }
 });
+
 
 // Toggle between empty state and data view
 function updateViewState() {
@@ -226,6 +246,18 @@ function updateCharts(data) {
     console.log('📊 Number of variants found:', variantNames.length);
     console.log('📊 Variant names:', variantNames);
 
+    // AWS Color Palette for charts
+    const awsColors = [
+        '#ff9900', // AWS Orange
+        '#0073bb', // AWS Blue
+        '#1d8102', // AWS Green
+        '#ec7211', // Dark Orange
+        '#00a1c9', // Light Blue
+        '#2dbe60', // Light Green
+        '#d13212', // Red
+        '#8c4fff', // Purple
+    ];
+
     variantNames.forEach((variant, index) => {
         const prices = allDates.map(date => {
             if (variantData[variant][date]) {
@@ -234,26 +266,26 @@ function updateCharts(data) {
             return null;
         });
 
-        // Generate a unique color for each variant
-        const hue = (index * 360 / variantNames.length) % 360;
-        const color = `hsl(${hue}, 70%, 60%)`;
+        // Use AWS color palette
+        const color = awsColors[index % awsColors.length];
 
         datasets.push({
             label: variant,
             data: prices,
             borderColor: color,
-            backgroundColor: `hsla(${hue}, 70%, 60%, 0.1)`,
-            borderWidth: 3,
+            backgroundColor: `${color}20`,
+            borderWidth: 2,
             fill: false,
             tension: 0.4,
             pointRadius: 4,
             pointHoverRadius: 6,
             pointBackgroundColor: color,
-            pointBorderColor: '#fff',
+            pointBorderColor: '#1a2332',
             pointBorderWidth: 2,
-            spanGaps: true // Connect lines even if there are null values
+            spanGaps: true
         });
     });
+
 
     console.log('📊 Number of datasets created:', datasets.length);
 
@@ -301,16 +333,16 @@ function updatePriceTrendChart(labels, datasets) {
                     display: true,
                     position: 'top',
                     labels: {
-                        color: '#a0aec0',
-                        padding: 15,
+                        color: '#aab7c4',
+                        padding: 12,
                         font: {
-                            size: 12
+                            size: 12,
+                            family: 'Open Sans, sans-serif'
                         },
                         usePointStyle: true,
                         pointStyle: 'circle'
                     },
                     onClick: function (e, legendItem, legend) {
-                        // Default Chart.js behavior - toggle dataset visibility
                         const index = legendItem.datasetIndex;
                         const ci = legend.chart;
 
@@ -324,12 +356,19 @@ function updatePriceTrendChart(labels, datasets) {
                     }
                 },
                 tooltip: {
-                    backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                    backgroundColor: 'rgba(26, 35, 50, 0.95)',
                     padding: 12,
-                    titleColor: '#fff',
-                    bodyColor: '#a0aec0',
-                    borderColor: 'rgba(102, 126, 234, 0.5)',
+                    titleColor: '#ffffff',
+                    bodyColor: '#aab7c4',
+                    borderColor: '#ff9900',
                     borderWidth: 1,
+                    titleFont: {
+                        family: 'Open Sans, sans-serif',
+                        weight: '700'
+                    },
+                    bodyFont: {
+                        family: 'Open Sans, sans-serif'
+                    },
                     callbacks: {
                         label: function (context) {
                             return `${context.dataset.label}: ₹${context.parsed.y.toLocaleString()}`;
@@ -341,10 +380,13 @@ function updatePriceTrendChart(labels, datasets) {
                 y: {
                     beginAtZero: false,
                     grid: {
-                        color: 'rgba(255, 255, 255, 0.05)'
+                        color: '#2a3f5f'
                     },
                     ticks: {
-                        color: '#a0aec0',
+                        color: '#aab7c4',
+                        font: {
+                            family: 'Open Sans, sans-serif'
+                        },
                         callback: function (value) {
                             return '₹' + value.toLocaleString();
                         }
@@ -352,10 +394,13 @@ function updatePriceTrendChart(labels, datasets) {
                 },
                 x: {
                     grid: {
-                        color: 'rgba(255, 255, 255, 0.05)'
+                        color: '#2a3f5f'
                     },
                     ticks: {
-                        color: '#a0aec0',
+                        color: '#aab7c4',
+                        font: {
+                            family: 'Open Sans, sans-serif'
+                        },
                         maxRotation: 45,
                         minRotation: 45
                     }
@@ -373,11 +418,18 @@ function updateDistributionChart(labels, data) {
         distributionChart.destroy();
     }
 
-    // Generate gradient colors
-    const colors = labels.map((_, i) => {
-        const hue = (i * 360 / labels.length) % 360;
-        return `hsla(${hue}, 70%, 60%, 0.8)`;
-    });
+    // AWS Color Palette
+    const awsColors = [
+        '#ff9900', // AWS Orange
+        '#0073bb', // AWS Blue
+        '#1d8102', // AWS Green
+        '#ec7211', // Dark Orange
+        '#00a1c9', // Light Blue
+        '#2dbe60', // Light Green
+        '#d13212', // Red
+        '#8c4fff', // Purple
+    ];
+    const colors = labels.map((_, i) => awsColors[i % awsColors.length]);
 
     distributionChart = new Chart(ctx, {
         type: 'bar',
@@ -400,12 +452,19 @@ function updateDistributionChart(labels, data) {
                     display: false
                 },
                 tooltip: {
-                    backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                    backgroundColor: 'rgba(26, 35, 50, 0.95)',
                     padding: 12,
-                    titleColor: '#fff',
-                    bodyColor: '#a0aec0',
-                    borderColor: 'rgba(102, 126, 234, 0.5)',
+                    titleColor: '#ffffff',
+                    bodyColor: '#aab7c4',
+                    borderColor: '#ff9900',
                     borderWidth: 1,
+                    titleFont: {
+                        family: 'Open Sans, sans-serif',
+                        weight: '700'
+                    },
+                    bodyFont: {
+                        family: 'Open Sans, sans-serif'
+                    },
                     callbacks: {
                         label: function (context) {
                             return `₹${context.parsed.y.toLocaleString()}`;
@@ -417,10 +476,13 @@ function updateDistributionChart(labels, data) {
                 y: {
                     beginAtZero: true,
                     grid: {
-                        color: 'rgba(255, 255, 255, 0.05)'
+                        color: '#2a3f5f'
                     },
                     ticks: {
-                        color: '#a0aec0',
+                        color: '#aab7c4',
+                        font: {
+                            family: 'Open Sans, sans-serif'
+                        },
                         callback: function (value) {
                             return '₹' + value.toLocaleString();
                         }
@@ -431,7 +493,10 @@ function updateDistributionChart(labels, data) {
                         display: false
                     },
                     ticks: {
-                        color: '#a0aec0',
+                        color: '#aab7c4',
+                        font: {
+                            family: 'Open Sans, sans-serif'
+                        },
                         maxRotation: 45,
                         minRotation: 45
                     }
