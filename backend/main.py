@@ -26,7 +26,8 @@ app.add_middleware(
 app.mount("/static", StaticFiles(directory="frontend"), name="static")
 
 # Load data once at startup
-df = load_data()
+def get_df():
+    return load_data()
 
 @app.get("/")
 async def root():
@@ -36,7 +37,7 @@ async def root():
 @app.get("/api/models")
 async def get_models():
     """Get list of all unique phone models"""
-    models = df["model"].unique().tolist()
+    models = get_df()["model"].unique().tolist()
     return {"models": models}
 
 @app.get("/api/data")
@@ -47,7 +48,7 @@ async def get_data(
     storage: Optional[str] = None
 ):
     """Get price data with optional filters"""
-    filtered_df = df.copy()
+    filtered_df = get_df()
     
     if model:
         filtered_df = filtered_df[filtered_df["model"] == model]
@@ -68,7 +69,7 @@ async def get_stats(
     storage: Optional[str] = None
 ):
     """Get statistics for filtered data"""
-    filtered_df = df.copy()
+    filtered_df = get_df()
     
     if model:
         filtered_df = filtered_df[filtered_df["model"] == model]
@@ -108,6 +109,7 @@ async def get_price_history(
     storage: Optional[str] = None
 ):
     """Get price history for a specific model configuration"""
+    df = get_df()
     filtered_df = df[df["model"] == model].copy()
     
     if color:
@@ -127,7 +129,7 @@ async def get_price_history(
 @app.get("/api/filters")
 async def get_filter_options(model: Optional[str] = None):
     """Get available filter options"""
-    filtered_df = df.copy()
+    filtered_df = get_df()
     
     if model:
         filtered_df = filtered_df[filtered_df["model"] == model]
